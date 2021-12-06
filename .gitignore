@@ -27,6 +27,7 @@ buildNumber.properties
 ## Java
 ##############################
 .mtj.tmp/
+*.log
 *.class
 *.jar
 *.war

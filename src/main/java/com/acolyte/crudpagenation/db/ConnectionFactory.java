@@ -13,7 +13,7 @@ public class ConnectionFactory {
     String url = "jdbc:mysql://localhost:3306/employeedb";
     String user = "root";
     String password = "root";
-    String driverClass = "com.mysql.jdbc.Driver";
+    String driverClass = "com.mysql.cj.jdbc.Driver";
 
     private ConnectionFactory() {
         try {

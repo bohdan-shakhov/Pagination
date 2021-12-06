@@ -15,7 +15,7 @@ public class EmployeeDAO {
     private static final Logger LOGGER = Logger.getLogger(EmployeeDAO.class);
 
     Connection connection;
-    Statement statement;
+    Statement stmt;
     private int noOfRecords;
 
     public EmployeeDAO() {}
@@ -26,38 +26,38 @@ public class EmployeeDAO {
     }
 
     public List<Employee> viewAllEmployees(int offset, int noOfRecords) {
-        String query = "select SQL_CALC_FOUND_ROWS * from employee limit " + offset + ", " + noOfRecords;
+        String query = "select * from employee limit "
+                + offset + ", " + noOfRecords;
         List<Employee> list = new ArrayList<>();
-        Employee employee = null;
-
+        Employee employee;
         try {
             connection = getConnection();
-            statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery(query);
-
+            stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 employee = new Employee();
                 employee.setEmployeeId(rs.getInt("emp_id"));
                 employee.setEmployeeName(rs.getString("emp_name"));
                 employee.setSalary(rs.getDouble("salary"));
                 employee.setDeptName(rs.getString("dept_name"));
+                list.add(employee);
             }
             rs.close();
 
-            rs = statement.executeQuery("SELECT FOUND_ROWS()");
-            if (rs.next()) {
+            rs = stmt.executeQuery("SELECT COUNT(*) FROM employee");
+            if(rs.next())
                 this.noOfRecords = rs.getInt(1);
-            }
         } catch (SQLException e) {
-            LOGGER.error("error in EmployeeDAO.java in List<Employee> viewAllEmployees(int, int)");
-        } finally {
+            e.printStackTrace();
+        } finally
+        {
             try {
-                if (statement != null)
-                    statement.close();
-                if (connection != null)
+                if(stmt != null)
+                    stmt.close();
+                if(connection != null)
                     connection.close();
             } catch (SQLException e) {
-                LOGGER.error("can't close statement or connection in EmployeeDAO.java");
+                e.printStackTrace();
             }
         }
         return list;
